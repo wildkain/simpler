@@ -1,7 +1,9 @@
 class TestsController < Simpler::Controller
 
   def index
-    render plain: "Some string"
+    #headers['Content-Type'] = 'text/plain'
+    #render plain: "Some text"
+    #@tests = Test.all
   end
 
   def create
@@ -9,7 +11,7 @@ class TestsController < Simpler::Controller
   end
 
   def show
-    @id = params[:id]
+    @test = Test.find(params[:id])
   end
 
 end
