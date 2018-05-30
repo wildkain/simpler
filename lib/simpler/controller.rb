@@ -22,6 +22,21 @@ module Simpler
       @response.finish
     end
 
+
+    def status(code)
+      @response.status = code
+    end
+
+    def headers
+      @response
+    end
+
+
+    def plain(str)
+      @response.write(str)
+      @response['Content-Type'] = 'text/plain'
+    end
+
     private
 
     def extract_name
@@ -33,9 +48,10 @@ module Simpler
     end
 
     def write_response
-      body = render_body
-
-      @response.write(body)
+      if @response.body.empty?
+        body = render_body
+       	@response.write(body)
+      end
     end
 
     def render_body
@@ -43,11 +59,15 @@ module Simpler
     end
 
     def params
-      @request.params
+      @request.env['simpler.params']
     end
 
     def render(template)
-      @request.env['simpler.template'] = template
+      if template[:plain]
+        plain(template[:plain])
+      else
+        @request.env['simpler.template'] = template
+      end
     end
 
   end
